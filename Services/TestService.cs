@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using BaltaWeb.Interfaces;
 using Newtonsoft.Json;
-using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace BaltaWeb.Services
 {
@@ -15,7 +12,7 @@ namespace BaltaWeb.Services
         public TestService(HttpClient httpClient, IMapper mapper)
         {
             _mapper = mapper;
-            httpClient.BaseAddress = new Uri("https://api.adviceslip.com");
+            httpClient.BaseAddress = new Uri("https://api.senior.com.br");
             _httpClient = httpClient;
         }
 
@@ -24,9 +21,9 @@ namespace BaltaWeb.Services
           
           var result = await _httpClient.GetAsync(address);
           var stringResult = result.Content.ReadAsStringAsync().Result;         
-          var desc2 = JsonConvert.DeserializeObject<T>(stringResult);          
+          var deserializer = JsonConvert.DeserializeObject<T>(stringResult);          
 
-          return desc2;
+          return deserializer;
         }
 
 

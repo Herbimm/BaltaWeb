@@ -11,10 +11,12 @@ namespace BaltaWeb.Controllers
     [ApiController]
     public class TestController : ControllerBase
     {
+        private readonly ISeniorAuthenticationService _seniorAuthenticationService;
         private readonly ITesteService _testeService;
 
-        public TestController(ITesteService testeService)
+        public TestController(ITesteService testeService, ISeniorAuthenticationService seniorAuthenticationService)
         {
+            _seniorAuthenticationService = seniorAuthenticationService;
             _testeService = testeService;
         }
 
@@ -27,5 +29,14 @@ namespace BaltaWeb.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("login")]
+        public async Task<IActionResult> LoginAsync()
+        {
+            await _seniorAuthenticationService.DetectGoogleTranslatorAsync();
+            return Ok();
+        }
+
+
     }
 }

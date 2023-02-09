@@ -67,10 +67,8 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
     });
 }
 void ConfigureMvc(WebApplicationBuilder builder)
-{
+{  
     
-    
-
     builder.Services.AddHttpClient<TestService<object>>();
 
     builder.Services.AddEndpointsApiExplorer();
@@ -111,6 +109,7 @@ void ConfigureServices(WebApplicationBuilder builder)
 
     builder.Services.AddTransient<TokenService>();
     builder.Services.AddScoped(typeof(ITesteService), typeof(TestService<object>));
+    builder.Services.AddScoped<ISeniorAuthenticationService, SeniorAuthenticationService>();
     builder.Services.AddTransient<EmailService>();
     builder.Services.AddSingleton(mapper);
 }
