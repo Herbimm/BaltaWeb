@@ -1,5 +1,8 @@
+using AutoMapper;
 using BaltaWeb;
 using BaltaWeb.Data;
+using BaltaWeb.Interfaces;
+using BaltaWeb.Mapper;
 using BaltaWeb.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -65,6 +68,11 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
 }
 void ConfigureMvc(WebApplicationBuilder builder)
 {
+    
+    
+
+    builder.Services.AddHttpClient<TestService<object>>();
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
@@ -91,12 +99,18 @@ void ConfigureMvc(WebApplicationBuilder builder)
     });
 }
 void ConfigureServices(WebApplicationBuilder builder)
-{    
+{
+    var config = new MapperConfiguration(cfg =>
+    {
+        cfg.AddProfile <BlogMapperProfile>();
+    });
+    IMapper mapper = config.CreateMapper();
 
     builder.Services.AddDbContext<BlogDataContext>(options =>
             options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-
     builder.Services.AddTransient<TokenService>();
+    builder.Services.AddScoped(typeof(ITesteService), typeof(TestService<object>));
     builder.Services.AddTransient<EmailService>();
+    builder.Services.AddSingleton(mapper);
 }
