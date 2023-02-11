@@ -42,7 +42,6 @@ namespace BaltaWeb.Services
                 var readResponse = response.Content.ReadAsStringAsync();
             }
         }
-
         public async Task PostUserAsync()
         {
             throw new NotImplementedException();
