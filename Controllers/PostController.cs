@@ -1,4 +1,5 @@
-﻿using BaltaWeb.Data;
+﻿using BaltaWeb.Attributes;
+using BaltaWeb.Data;
 using BaltaWeb.ViewModels.Posts;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,7 @@ namespace BaltaWeb.Controllers
         }
 
         [HttpGet("teste")]
+        [ApiKey] // Utilizasse essa classe criada para authenticar com uma chave de api Key sem precisar de gerar token
         public async Task<IActionResult> GetTeste([FromServices] BlogDataContext context)
         {
             var posts = await context.Categories.ToListAsync();

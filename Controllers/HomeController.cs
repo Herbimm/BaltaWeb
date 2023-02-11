@@ -10,11 +10,6 @@ namespace BaltaWeb.Controllers
     [Route("")]
     public class HomeController : ControllerBase
     {
-        [HttpGet("")]
-        [ApiKey]
-        public IActionResult Get()
-        {
-            return Ok();
-        }
+        
     }
 }

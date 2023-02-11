@@ -74,12 +74,12 @@ void ConfigureMvc(WebApplicationBuilder builder)
 {
     builder.Services.AddSwaggerGen(c =>
     {
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample Api Herbert", Version = "v1" });
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sampe", Version = "v1" });
     });
 
     builder.Services.AddHttpClient<TestService<object>>();
 
-    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddEndpointsApiExplorer(); 
     builder.Services.AddSwaggerGen();
 
     builder.Services.AddMemoryCache();    
