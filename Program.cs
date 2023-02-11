@@ -22,10 +22,10 @@ ConfigureServices(builder);
 var app = builder.Build();
 LoadConfiguration(app);
 
-app.UseHttpsRedirection();
-app.UseAuthentication();
-app.UseAuthorization();
-app.UseStaticFiles();
+app.UseHttpsRedirection(); // HTTPS redirect
+app.UseAuthentication(); // O usuário precisa ser logado para usar tais métodos marcados;
+app.UseAuthorization(); // o usuário precisa de tais permissões.
+app.UseStaticFiles(); // Adiciona a solução a possibilidade de guardar arquivos na APi como IMG ou outros, usar a pasta "wwwroot"
 app.MapControllers();
 app.UseResponseCompression();
 
@@ -47,14 +47,16 @@ void LoadConfiguration(WebApplication app)
     Configuration.ApiKeyName = app.Configuration.GetValue<string>("ApiKeyName");
     Configuration.ApiKey = app.Configuration.GetValue<string>("ApiKey");
 
+    //COnfig de EmAIL
     var smtp = new Configuration.SmtpConfiguration();
     app.Configuration.GetSection("Smtp").Bind(smtp);
     Configuration.Smtp = smtp;
 }
 void ConfigureAuthentication(WebApplicationBuilder builder)
 {
-    var key = Encoding.ASCII.GetBytes(Configuration.JwtKey);
 
+    // [ApiKey] configura para o client poder fazer requisição usando uma ApiKey, a apikey vai no header da solicitação.
+    var key = Encoding.ASCII.GetBytes(Configuration.JwtKey);
     builder.Services.AddAuthentication(x =>
     {
         x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -77,12 +79,17 @@ void ConfigureMvc(WebApplicationBuilder builder)
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sampe", Version = "v1" });
     });
 
+    // para rodar o httpclient precisa disso
     builder.Services.AddHttpClient<TestService<object>>();
 
     builder.Services.AddEndpointsApiExplorer(); 
     builder.Services.AddSwaggerGen();
 
-    builder.Services.AddMemoryCache();    
+    // trabalhar com mémoria precisa disso
+    builder.Services.AddMemoryCache();
+
+    // Comprime as respostas Json em um formato GzipCompression, existem outros, isso é utilizado para otimizar as respostas, mas só vale a pena usar
+    //se os json forem realmente grandes.
     builder.Services.AddResponseCompression(options =>
     {
         // options.Providers.Add<BrotliCompressionProvider>();
@@ -92,8 +99,10 @@ void ConfigureMvc(WebApplicationBuilder builder)
     builder.Services.Configure<GzipCompressionProviderOptions>(options =>
     {
         options.Level = CompressionLevel.Optimal;
-    });
+    }); 
 
+    // Essa configuração Adiciona controllers na api e o JsonIgnore vai remover a validação padrão que antes do ModelState já retornar direto o erro
+    // para o usuário, então se for adicionar essas linhas do código, é recomendavel usar validação com o ModelState.isValid
     builder.Services.AddControllers()
     .ConfigureApiBehaviorOptions(options =>
     {
@@ -102,7 +111,7 @@ void ConfigureMvc(WebApplicationBuilder builder)
     {
         x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault;
-    });
+    }); 
 }
 void ConfigureServices(WebApplicationBuilder builder)
 {
