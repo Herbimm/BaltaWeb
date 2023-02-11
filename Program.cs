@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System.IO.Compression;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -70,8 +71,12 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
     });
 }
 void ConfigureMvc(WebApplicationBuilder builder)
-{  
-    
+{
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sample Api Herbert", Version = "v1" });
+    });
+
     builder.Services.AddHttpClient<TestService<object>>();
 
     builder.Services.AddEndpointsApiExplorer();
