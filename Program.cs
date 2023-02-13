@@ -75,8 +75,7 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
 void ConfigureMvc(WebApplicationBuilder builder)
 {
     builder.Services.AddSwaggerGen(c =>
-    {
-        c.RoutePrefix = string.Empty;
+    {       
         c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sampe", Version = "v1" });
     });
 
