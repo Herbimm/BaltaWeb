@@ -3,6 +3,8 @@ using BaltaWeb.Services;
 using BaltaWeb.ViewModels.Test;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace BaltaWeb.Controllers
 {   
@@ -20,7 +22,7 @@ namespace BaltaWeb.Controllers
             _testeService = testeService;
         }
 
-
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("test")]
         public async Task<IActionResult> GetAsync()
         {           
@@ -30,6 +32,7 @@ namespace BaltaWeb.Controllers
             return Ok(result);
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         [HttpGet("login")]
         public async Task<IActionResult> LoginAsync()
         {
