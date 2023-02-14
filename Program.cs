@@ -31,14 +31,15 @@ app.MapControllers();
 app.UseResponseCompression();
 
 if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI( c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample Api Herbert");
-    });
+{    
     Console.WriteLine("Estou em Dev");
 }
+
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Sample Api Herbert");
+});
 
 app.Run();
 
@@ -74,8 +75,8 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
     });
 }
 void ConfigureMvc(WebApplicationBuilder builder)
-{  
-
+{
+    builder.Services.AddCors();
     // para rodar o httpclient precisa disso
     builder.Services.AddHttpClient<TestService<object>>();
 
@@ -83,12 +84,12 @@ void ConfigureMvc(WebApplicationBuilder builder)
     #region Swagger
     builder.Services.AddSwaggerGen(c =>
     {
-        var desc = $"Vila Estrela <br />{new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime}";
+        var desc = $"Sample Api Herbert <br />{new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime}";
 
         c.SwaggerDoc("v1", new OpenApiInfo
         {
             Version = Assembly.GetEntryAssembly().GetName().Version.ToString(),
-            Title = "Vila Estrela Identity",
+            Title = "Sample Api Herbert",
             Description = desc
         });
         c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
