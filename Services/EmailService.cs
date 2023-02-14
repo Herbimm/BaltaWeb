@@ -21,7 +21,7 @@ namespace BaltaWeb.Services
             _configuration.GetSection("SmtpConfiguration").Bind(smtpConfigurationAccess);
 
             var smtpClient = new SmtpClient(smtpConfigurationAccess.Host, int.Parse(smtpConfigurationAccess.Port));
-            smtpClient.Credentials = new NetworkCredential(Configuration.Smtp.UserName, Configuration.Smtp.Password);
+            smtpClient.Credentials = new NetworkCredential(smtpConfigurationAccess.Username, smtpConfigurationAccess.Password);
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = true;
 
