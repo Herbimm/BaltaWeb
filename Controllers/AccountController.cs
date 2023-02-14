@@ -17,7 +17,7 @@ namespace BaltaWeb.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        [HttpPost("v1/accounts/")]
+        [HttpPost("v1/accounts/register")]
         public async Task<IActionResult> Post(
             [FromBody] RegisterViewModel model,
             [FromServices] BlogDataContext context,

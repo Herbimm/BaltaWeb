@@ -3,6 +3,7 @@ using BaltaWeb;
 using BaltaWeb.Data;
 using BaltaWeb.Interfaces;
 using BaltaWeb.Mapper;
+using BaltaWeb.Models;
 using BaltaWeb.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -49,6 +50,8 @@ void LoadConfiguration(WebApplication app)
     Configuration.JwtKey = app.Configuration.GetValue<string>("JwtKey");
     Configuration.ApiKeyName = app.Configuration.GetValue<string>("ApiKeyName");
     Configuration.ApiKey = app.Configuration.GetValue<string>("ApiKey");
+
+    app.Configuration.GetSection("SmtpConfiguration").Bind(new SmtpConfiguration());
 
     //COnfig de EmAIL
     var smtp = new Configuration.SmtpConfiguration();
