@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.IO.Compression;
+using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -73,17 +74,55 @@ void ConfigureAuthentication(WebApplicationBuilder builder)
     });
 }
 void ConfigureMvc(WebApplicationBuilder builder)
-{
-    builder.Services.AddSwaggerGen(c =>
-    {       
-        c.SwaggerDoc("v1", new OpenApiInfo { Title = "Sampe", Version = "v1" });
-    });
+{  
 
     // para rodar o httpclient precisa disso
     builder.Services.AddHttpClient<TestService<object>>();
 
-    builder.Services.AddEndpointsApiExplorer(); 
-    builder.Services.AddSwaggerGen();
+    builder.Services.AddEndpointsApiExplorer();
+    #region Swagger
+    builder.Services.AddSwaggerGen(c =>
+    {
+        var desc = $"Vila Estrela <br />{new FileInfo(Assembly.GetExecutingAssembly().Location).LastWriteTime}";
+
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Version = Assembly.GetEntryAssembly().GetName().Version.ToString(),
+            Title = "Vila Estrela Identity",
+            Description = desc
+        });
+        c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+        {
+            Description =
+                   "JWT Authorization header using the Bearer scheme." +
+                   " \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
+            Name = "Authorization",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer"
+        });
+
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                 {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "identity",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+
+                        },
+                        new List<string>()
+                    }
+                 });
+    });
+    #endregion
+
 
     // trabalhar com mémoria precisa disso
     builder.Services.AddMemoryCache();
