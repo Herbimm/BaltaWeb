@@ -1,13 +1,26 @@
-﻿using System.Net;
+﻿using BaltaWeb.Models;
+using System.Net;
 using System.Net.Mail;
+
 
 namespace BaltaWeb.Services
 {
     public class EmailService
     {
-        public bool Send(string toName, string toEmail, string subject, string body, string fromName = "Central - Vila Estrela", string fromEmail = "herbertzin@gmail.com")
+        private readonly IConfiguration _configuration;       
+
+        public EmailService(IConfiguration configuration)
         {
-            var smtpClient = new SmtpClient(Configuration.Smtp.Host, Configuration.Smtp.Port);
+            _configuration = configuration;          
+                    
+        }
+        
+        public bool Send(string toName, string toEmail, string subject, string body, string fromName = "hscarvalho@outlook.com.br", string fromEmail = "herbertzin@gmail.com")
+        {
+            var smtpConfigurationAccess = new SmtpConfiguration();
+            _configuration.GetSection("SmtpConfiguration").Bind(smtpConfigurationAccess);
+
+            var smtpClient = new SmtpClient(smtpConfigurationAccess.Host, int.Parse(smtpConfigurationAccess.Port));
             smtpClient.Credentials = new NetworkCredential(Configuration.Smtp.UserName, Configuration.Smtp.Password);
             smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
             smtpClient.EnableSsl = true;

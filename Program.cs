@@ -49,14 +49,12 @@ void LoadConfiguration(WebApplication app)
 {
     Configuration.JwtKey = app.Configuration.GetValue<string>("JwtKey");
     Configuration.ApiKeyName = app.Configuration.GetValue<string>("ApiKeyName");
-    Configuration.ApiKey = app.Configuration.GetValue<string>("ApiKey");
-
-    app.Configuration.GetSection("SmtpConfiguration").Bind(new SmtpConfiguration());
+    Configuration.ApiKey = app.Configuration.GetValue<string>("ApiKey");    
 
     //COnfig de EmAIL
     var smtp = new Configuration.SmtpConfiguration();
     app.Configuration.GetSection("Smtp").Bind(smtp);
-    Configuration.Smtp = smtp;
+    Configuration.Smtp = smtp;    
 }
 void ConfigureAuthentication(WebApplicationBuilder builder)
 {
